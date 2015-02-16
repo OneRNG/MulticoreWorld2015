@@ -1,4 +1,4 @@
-LCA2015
+Multicore World 2015
 =======
 
-Slides for presentation of LCA2015
+Slides for presentation of Multicore World 2015

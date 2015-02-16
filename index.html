@@ -4,10 +4,10 @@
 	<head>
 		<meta charset="utf-8">
 
-		<title>OneRNG - a verifiable and Open Hardware Random Number Generator from NZ</title>
+		<title>OneRNG - an open solution to a core security performance issue</title>
 
 		<meta name="description" content="OneRNG">
-		<meta name="author" content="Jim Cheetham &amp; Paul Campbell">
+		<meta name="author" content="Jim Cheetham">
 
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -48,16 +48,246 @@
 			<!-- Any section element inside of this container is displayed as a slide -->
 			<div class="slides">
 				<section>
+					<section>
 					<h1>OneRNG</h1>
-                    <p>An Open Hardware &amp; Open Source<br/><i>Verifiable</i> Random Number Generator</p>
-					<h3>LCA2015</h3>
-					<p>Jim Cheetham &amp; Paul Campbell</p>
+					<p><em>An open solution to a core security performance issue</em></p>
+					<h3>Multicore World 2015</h3>
+					<p>Jim Cheetham</p>
 					<p><small><a href="http://onerng.info/">OneRNG.info</a><br/>
                     <a href="http://moonbaseotago.com/onerng">Moonbase Otago</a></small>
 					</p>
+					</section>
+					<section>
+					<h2>Jim Cheetham</h2>
+					<p>Information Security Office, University of Otago, NZ</p>
+					<p><code>&lt;jim.cheetham@otago.ac.nz&gt;</code></p>
+					<p>Security, Unix/Linux, Networks</p>
+					<p>Operations &amp; Architecture</p>
+					</section>
 				</section>
 
 				<section>
+					<section>
+						<h2>Contents</h2>
+						<ul>
+							<li>Information Security Primer</li>
+							<li>InfoSec in Computer Operations</li>
+							<li>Randomness in Simulations/Modelling</li>
+							<li>OneRNG</li>
+							
+						</ul>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>Information Security Primer</h2>
+						<ul>
+							<li>What do we mean by "InfoSec"?</li>
+							<li>The CIA Triad</li>
+						<ul>
+					</section>
+					<section>
+						<h2>Definitions of "InfoSec"</h2>
+						<ul>
+							<li><strong><em>CIA Triad</em>: "Confidentiality, Integrity, and Availability"</strong></li>
+							<li><em>OECD 9 Principles</em>: "Awareness, Responsibility, Response, Ethics, Democracy, Risk Assessment, Security Design and Implementation, Security Management, and Reassessment"</li>
+							<li><em>Parkerian Hexad</em>: "Confidentiality, Possession, Integrity, Authenticity, Availability, and Utility"</li>
+							<li><em>IAS Octave</em>: "Confidentiality, Integrity, Availability, Accountability, Auditability, Authenticity/Trustworthiness, Non-repudiation and Privacy"</li>
+						</ul>
+					</section>
+					
+					<section>
+						<h2>Confidentiality</h2>
+						<ul>
+							<li>A cornerstone of Privacy</li>
+							<li>Data at rest is protected</li>
+							<li>Data in transit is protected</li>
+							<li>Access controls within a system</li>
+						</ul>
+					</section>
+					
+					<section>
+						<h2>Integrity</h2>
+						<ul>
+							<li>Multiple copies of stored data</li>
+							<li>Checksums</li>
+							<li>Access controls &amp; audit</li>
+						<ul>
+					</section>
+					
+					<section>
+						<h2>Availability</h2>
+						<ul>
+							<li>Capacity planning</li>
+							<li>Early error detection</li>
+                            <li>Redundancy</li>
+                            <li>Disaster Recovery</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>Risk Assessment</h2>
+						<ul>
+							<li>Confidentiality failures
+								<p>Who else has a copy of our data?</p></li>
+							<li>Integrity failures
+								<p>What if our data has been corrupted/altered/lost?</p></li>
+							<li>Availability failures
+								<p>Failure to record valid observations?</p></li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>Early Timeline</h2>
+						<ul>
+						<li>1976 US Copyright Act - copyright became automatic</li>
+						<ul><li>Software "value" changed, and started to protect itself against users</li></ul>
+						<li>1986 Cuckoo's Egg - Cliff Stoll caught the KGB attacking US systems</li>
+						<li>1988 Morris Worm - demonstrating vulnerabilities in established code</li>
+						</ul>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>Infosec in Computer<br/>Operations</h2>
+						<ul>
+						<li>Systems are now much more defensive</li>
+						<li>More 'initial conditions' are being set randomly to prevent predictive attacks</li>
+						<li>More data is encrypted by default</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>Defensive uses of Random</h2>
+						<ul>
+						<li>Address Space Layout Randomisation - ASLR</li>
+						<li>Initial TCP Sequence numbers</li>
+						<li>Session Identifiers</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>Examples of Encryption</h2>
+						<ul>
+						<li>Transport Layer Security - TLS / HTTPS</li>
+						<li><tt>ssh</tt> &amp; RDP - remote access</li>
+						<li>Whole Disk Encryption</li>
+						<li>Encrypted Malware</li>
+						</ul>
+					</section>
+					<section>
+						<h2>Encryption</h2>
+						<p>Encryption prevents an unauthorised system from understanding
+						any data that they have found</p>
+						<ul>
+							<li><strong>Symmetric Encryption</strong>
+							<p>A single key is used both to lock and unlock the data</p></li>
+							<li><strong>Public Key Encryption</strong>
+							<p>Two related keys are needed; one locks, the other unlocks</p></li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>Encryption Keys</h2>
+						<ul>
+							<li>Keys need to be kept secret</li>
+							<li>Keys need to be complex to prevent them being guessed</li>
+							<li>Keys need to be <em>unpredictable</em></li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>Unpredictablity</h2>
+						<ul>
+							<li>Described with two related concepts &ndash; <em>Randomness</em> &amp; <em>Entropy</em></li>
+							<li>Randomness is a lack of pattern in a sequence of events</li>
+							<li>Entropy is the amount of information in a 'message', or 'surprisal' value</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>Sources of Randomness</h2>
+						<ul>
+							<li>The Real Non-Deterministic World - True Random
+							<ul>
+								<li>QM events, e.g. Radioactive Decay</li>
+								<li>Environmental Noise</li>
+							</ul>
+							</li>
+                            <li>Algorithms with complex output
+                            <ul>
+                                    <li>Pseudo-Random - PRNG</li>
+                                    <li>Distributed Random Bit Generator - DRBG</li>
+                                    <li>Cryptographically Secure - CSPRNG</li>
+                            </ul></li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>Algorithmic Complexity</h2>
+						<ul>
+							<li>Algorithms can produce uniformly distributed sequences that seem to be Random</li>
+							<li>But the algorithms need initial conditions to be set - the 'seed'</li>
+							<li>Using the same seed results in an identical sequence</li>
+                            <li>Therefore any run from a given seed value is not Random?</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>Seed Values</h2>
+						<ul>
+						<li>Computers have limited sources for True Random data</li>
+						<li>Environmental Noise: slow &amp; not universally applicable</li>
+							<ul><li>Keyboard/Mouse timings</li>
+								<li>Disk access timings</li>
+								<li>Network activity timings</li></ul>
+						<li>True Random data is needed to select seed values for PRNGs</li>
+						</ul>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>Statistics &amp Modelling</h2>
+						<p>This is not my expert area &hellip;</p>
+						<ul>
+							<li>LLN - the Law of Large Numbers</li>
+							<li>Monte Carlo methods; simulations often specify a PRNG to be used, for portability</li>
+							<li>Markov processes</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>PRNG/DRBG</h2>
+						<blockquote>"Anyone who considers arithmetical methods of producing random digits is, of course, in a state of sin." &mdash; John von Neumann, 1951</blockquote>
+					</section>
+
+					<section>
+						<h2>PRNG/DRBG</h2>
+						<ul><li>Problems</li>
+						<ul>
+							<li>Periodicity</li>
+							<li>Output Artifacts</li>
+							<li>Unprovable</li>
+						</ul>
+						<li>Benefits</li>
+						<ul>
+							<li>Repeatable</li>
+							<li>Fast</li>
+						</ul>
+						</ul>
+					</section>
+					<section>
+						<h2>Repeatable</h2>
+						<p>Use known seeds when testing your simulation code</p>
+						<p>Use True Random seeds when conducting your research</p>
+					</section>
+				</section>
+
+				<section>
+
                   	<section>
 						<h2>What is OneRNG?</h2>
                     	<p>It is a small USB-connected device</p>
@@ -73,12 +303,17 @@
 						<img src="BoardAndTinfoilHat-800.png">
 					</section>
                   	<section>
-                    	<h2>Entropy Generator</h2>
+                    	<h2>Entropy Collector</h2>
 						<img id="iconic" src="avalanche.svg"/>
-                    	<p>The cake is a lie &hellip;</p>
                     	<p>By default, OneRNG measures <i>unpredictable</i> physical events<br/>
                     	from an <strong>avalanche diode</strong> circuit<br/>
                     	and returns the results &mdash; but this is a bit too raw to be used directly</p>
+                  	</section>
+                  	<section>
+                    	<h2>Environmental Noise</h2>
+						<img id="iconic" src="radio.svg"/>
+                    	<p>You can also enable the RF monitor to get another source of entropy data
+                    	with a higher quality &mdash; but at the cost of a little paranoia</p>
                   	</section>
                   	<section>
                     	<h2>Whitened data</h2>
@@ -86,123 +321,38 @@
                     	<p>This raw data is then whitened through a CRC16 function
                     	which makes it good enough to be fed into your system</p>
 						<p>There is an AES hardware module available, but it is not used
-						by the default firmware</p>
+						by the default firmware (trust issues)</p>
                   	</section>
 				  	<section>
 						<h2>Keep topping up the pool</h2>
 						<img id="iconic" src="pool.svg"/>
 						<p>There's a 7.5KB pool of data that is kept full</p>
-						<p>New data is mixed in over the old data all the time</p>
+						<p>New data is mixed in over the old data <em>all</em> the time</p>
 						<p>A LED on the board tells you when the pool is full<br/>
 						and warns you when it is getting empty</p>
 				  	</section>
                   	<section>
-                    	<h2><code>/dev/urandom</code></h2>
+                    	<h2><code>Output</code></h2>
 						<img id="iconic" src="dice.svg"/>
-                    	<p>The results are fed into <code>/dev/random</code> as an additional
-                    	entropy source for the system, and you should read them from there</p>
-		    			<p>If you RTFM, you'll read from <code>/dev/urandom</code> all of the time
-						on Linux, but not necessarily on other OSs</p>
-                  	</section>
-                  	<section>
-                    	<h2>And there's more &hellip;</h2>
-						<img id="iconic" src="radio.svg"/>
-                    	<p>You can also enable the RF monitor to get another source of entropy data
-                    	with a higher quality &mdash; but at the cost of a little paranoia</p>
+						<p>The output from OneRNG should be used as an Entropy input to your existing systems (preferably OS)</p>
+						<p>We provide ~7.5 bits of entropy per byte of data</>
                   	</section>
 					<section>
 						<h2>The flow of data</h2>
 						<img src="OneRNGdataflow.svg"/>
-					</section>
-				</section>
-
-				<section>
-					<section>
-			            <h2>Why random numbers?</h2>
-						<img id="iconic" src="pacman.svg"/>
-                    	<p>Cryptography has a huge appetite for random data<p>
-                    	<p>And your online Privacy and Security depends on Crypto<p>
-                    	<p>The more you encrypt, the more entropy you need to consume<p>
-					    <p>altcoin also requires high quality random data - coins have been
-						stolen because of weak RNGs</p>
-					</section>
-					<section>
-						<h2>Non-crypto random numbers?</h2>
-						<img id="iconic" src="infographic.svg"/>
-						<p>Astronomy Miniconf reminds us that <em><strong>"SCIENCE!"</strong></em>
-						uses large-scale numerical simulations (Monte Carlo, Markov Chain, etc),
-						and while they can use PRNG, they need to be careful about periodicity/repeats</p>
-						<p>I know nothing about the "Gaming" industry, but they need it, surely?</p>
-					</section>
-					<section>
-						<h2>PRNG</h2>
-						<img id="iconic" src="walltime.svg"/>
-						<p>Don't ever use the default &lt;INSERT_LANGUAGE_HERE&gt; random() function!</p>
-						<p>Don't use PID, or &mu;secs since epoch, or wall time</p>
-						<p>Don't do your own crypto, don't do your own RNG</p>
-						<p>By default, use <strong><code>/dev/urandom</code></strong></p>
-					</section>
-					<section>
-						<h2>True RNG vs PRNG</h2>
-						<img id="iconic" src="seeds.svg"/>
-						<p>Even if your PRNG is a CSPRNG, you'll feel the need for seed</p>
-						<p>Get your seed values from a True RNG</p>
-						<p>Only generate your long-lived private keys when there is sufficient entropy</p>
-					</section>
-					<section>
-						<h2>How much random can a /dev/random random?</h2>
-						<img id="iconic" src="anonymous.svg"/>
-						<p>Never mind the quantity, feel the quality</p>
-						<p>&hellip; unless you needed quantity, that is &hellip;</p>
-						<p>If your True RNG returned sufficient data, why use PRNGs at all?</p>
-						<p>(because you must mix multiple entropy sources together)</p>
-					</section>
-				</section>
-
-				<section>
-					<section>
-						<h2>Just because you're paranoid &hellip;</h2>
-						<img id="iconic" src="surveillance.svg"/>
-						<p>Even if they aren't out to get <i>you</i>, they'll get you.</p>
-					</section>
-					<section>
-						<h2>Known Badness</h2>
-						<p><img id="iconic" src="incognito.svg"/></p>
-						<ul>
-						<li>RSA SecurID token breach</li>
-						<li>The entire Certification Authority system</li>
-						<li>Dual EC_DRBG, $10 million NSA/RSA deal</li>
-						<li>RdRand and the Sigint Enabling Project &hellip;</li>
-						</ul>
-					</section>
-					<section>
-						<h2>Known Badness II</h2>
-						<p><img id="iconic" src="incognito.svg"/></p>
-						<ul>
-						<li>Supply-chain interception</li>
-						<li>BIOS Chronomancy; will persist across reflashing</li>
-						<li>Supercookies, Evercookies</li>
-						<li>NSA vs Vodafone (aka "We are the 43%")</li>
-						</ul>
-					</section>
-					<section>
-						<h2>Known Badness III</h2>
-						<p><img id="iconic" src="incognito.svg"/></p>
-						<ul>
-						<li>Everything "Edward Snowden"</li>
-						<li>! (Everything "Eben Moglen")</li>
-						</ul>
-					</section>
-					<section>
-						<h2>How are issued fixed?</h2>
-						<img id="iconic" src="layersdown.svg"/>
-						<p>When risks are &ldquo;addressed&rdquo; they are usually pushed either up or down the stack</p>
-						<p>They end up <em>requiring</em> trust in End-User Behaviour (unpatchable) or in the Hardware</p>
-
+						<p>The user controls the choice of sources</p>
+						<p>The user controls the use of Whitening</p>
+						<p>The user controls where the results go</p>
 					</section>
 				</section>
 
                 <section>
+					<section>
+						<h2>OneRNG for Crypto</h2>
+						<p>OneRNG was originally designed to help end-users improve their online privacy</p>
+						<p>Current demands for seed values outstrip the available Entropy</p>
+						<p>Online privacy advocates should be quick to distrust &hellip;</p>
+					</section>
                 	<section>
 						<h2>How does OneRNG help?</h2>
 						<img id="iconic" src="audit.svg"/>
@@ -244,45 +394,45 @@
 						<ul>
 							<li>The hardware you received conforms with the description</li>
 							<li>The firmware that is used matches the source</li>
-							<li>Tampering would be detectable</li>
+							<li>Tampering should be detectable</li>
 						</ul>
 					</section>
 				</section>
 
 			<section>
 				<section>
-					<h2>What will OneRNG provide on Linux?</h2>
-					<p>"More Entropy" means that /dev/random is less likely to block</p>
-					<p>"Early Entropy" means that /dev/urandom will be well-seeded before key generation</p>
-					<p>Real independent crypto users have another affordable high-quality source</p>
+					<h2><img id="iconic" src="kickstarter-logo-light.svg"/></h2>
+					<p>To get volume production set up, we used Kickstarter
+					with an NZD<strong>$10,000</strong> target over 45 days<p>
+					<ul>
+					<li>50%&nbsp;&nbsp;funded after 2 days</li>
+					<li>100% funded after 6 days</li>
+					<li>200% funded after 18 days</li>
+					<li>485% funded at close : NZD<strong>$48,551</strong></li>
+					</ul>
 				</section>
+
 				<section>
-					<h2>Using OneRNG with Linux</h2>
-					<p>We provide some software for you to use to make OneRNG an input to <code>/dev/random</code> via <code>rngd</code></p>
-					<p>This is architecture independent - python &amp; shell scripts</p>
-					<p>&hellip; and we don't get involved in your choice of init daemon &hellip;</p>
+					<h2><img id="iconic" src="kickstarter-logo-light.svg"/></h2>
+					<p>Rewards Options</p>
+					<p>We offered combinations of:</p>
+					<ul>
+						<li>NZD $50 - a single OneRNG from bulk manufacturing</li>
+						<li>NZD $90 - a device programmer unit</li>
+						<li>NZD $110 - a single hand-built unit</li>
+					</ul>
 				</section>
+
 				<section>
-					<h2>Just plug it in &hellip;</h2>
-					<p>UDEV detects the device (using an ID assigned from OpenMoko's range)</p>
-					<p>On insertion we validate the firmware, then start <code>rngd</code></p>
-					<p>On removal we remember to stop rngd for you!</p>
-				</section>
-				<section>
-					<h2>&hellip; but never leave me</h2>
-					<p>Increasingly, UDEV implementations make life more complex</p>
-					<p>No-one seems to bother with UDEV removal scripts</p>
-					<p>so the mechanism is probably not very well tested</p>
-				</section>
-				<section>
-					<h2>Serial over USB?</h2>
-					<p>USB CDC drivers are the generic USB serial interface</p>
-					<p>Sadly ModemManager stomps on every one unless you remember
-					to disable it in UDEV</p>
-					<p>OneRNG doesn't support Hayes AT commands &hellip;</p>
-					<p>UDEV: <code>ENV{ID_MM_DEVICE_IGNORE}="1"</code></p>
-					<p>Wireshark will capture USB traffic if you need it - <code>modprobe usbmon</code> first</p>
-					
+					<h2>Current Status</h2>
+					<p>As of mid February 2015:</p>
+					<ul>
+					<li>Units will be manufactured in Shenzen, China</li>
+					<li>The programming &amp; test devices are made in NZ</li>
+					<li>Firmware is cryptographically signed by a machine in NZ before being written to the manufactured devices</li>
+					<li>Waiting for Chinese New Year festivities to complete!</li>
+					<li>Next, Moonbase Otago opens an online store to sell OneRNG</p>
+					<ul>
 				</section>
 			</section>
 
@@ -333,51 +483,10 @@
 				</section>
 			</section>
 
-			<section>
-				<section>
-					<h2><img id="iconic" src="kickstarter-logo-light.svg"/></h2>
-					<p>To get volume production set up, we used Kickstarter
-					with an NZD<strong>$10,000</strong> target over 45 days<p>
-					<p>This is still running - we started just after Kiwicon8, on 15 Dec 2014, and will finish
-					a couple of weeks after LCA2015, on 29 Jan 2015</p>
-					<p><a href="https://www.kickstarter.com/projects/moonbaseotago/onerng-an-open-source-entropy-generator">https://www.kickstarter.com/projects/moonbaseotago/onerng-an-open-source-entropy-generator</a></p>
-					<img src="qr.svg"/>
-				</section>
-				<section>
-					<h2><img id="iconic" src="kickstarter-logo-light.svg"/></h2>
-					<p>Rewards:</p>
-					<ul>
-						<li>$50 NZD - a single OneRNG from bulk manufacturing</li>
-						<li>$90 NZD - a device programmer unit</li>
-						<li>$110 NZD - a single hand-built unit</li>
-						<li>$140 NZD - a single OneRNG from bulk, plus programmer</li>
-						<li>$190 NZD - a single hand-build unit, plus programmer</li>
-						<li>$200 NZD - 5 pack OneRNG from bulk</li>
-						<li>$290 NZD - 5 pack OneRNG from bulk, plus one programmer</li>
-						<li>$400 NZD - 10 pack OneRNG from bulk</li>
-				</section>
-				<section>
-					<h2><img id="iconic" src="kickstarter-logo-light.svg"/></h2>
-					<img src="KS13jan.png"/>
-					<p>(As of Tue 13 Jan 2015)</p>
-				</section>
-				<section>
-					<h2><img id="iconic" src="kickstarter-logo-light.svg"/></h2>
-					<p>50%&nbsp;&nbsp;funded after 2 days</p>
-					<p>100% funded after 6 days</p>
-					<p>200% funded after 18 days</p>
-					<p>Least Squares currently predicts ~400% funding at close :-)</p>
-					<h3>Current position</h3>
-					<p>Thu Jan 15 2015: <strong>252</strong> backers, NZD<strong>$27,034</strong> raised, <strong>13</strong> days to go</p>
-				</section>
-			</section>
-
 
 				<section>
 					<section>
-						<h2>What next?</h2>
 						<h2>Q &amp; A</h2>
-					    <h2><img id="iconic" src="kickstarter-logo-light.svg"/></h2>
 						<h3>http://onerng.info/</h3>
 					</section>
 					<section>
